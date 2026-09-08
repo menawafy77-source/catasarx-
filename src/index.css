@@ -10,68 +10,159 @@
     @apply leading-relaxed text-right;
     direction: rtl;
   }
-  /* KaTeX elements should maintain LTR direction for equations */
-  .markdown-body .katex {
+  
+  /* Dark mode markdown styling */
+  .dark .markdown-body,
+  :root:not(.light) .markdown-body {
+    color: #F1F5F9;
+  }
+  .dark .markdown-body .katex,
+  :root:not(.light) .markdown-body .katex {
     direction: ltr !important;
     unicode-bidi: isolate;
+    color: #FEF3C7;
   }
-  .markdown-body .katex-display {
-    @apply my-4 overflow-x-auto;
+  .dark .markdown-body .katex-display,
+  :root:not(.light) .markdown-body .katex-display {
+    @apply my-4 overflow-x-auto p-2 bg-[#050D1A]/70 rounded-xl border border-amber-500/20;
     direction: ltr !important;
   }
-  .markdown-body h1 {
-    @apply text-2xl font-bold mb-4 mt-6 text-gray-900;
+  .dark .markdown-body h1,
+  :root:not(.light) .markdown-body h1 {
+    @apply text-2xl font-black mb-4 mt-6 text-amber-300;
   }
-  .markdown-body h2 {
-    @apply text-xl font-bold mb-3 mt-5 text-gray-800 border-b pb-1 border-gray-100;
+  .dark .markdown-body h2,
+  :root:not(.light) .markdown-body h2 {
+    @apply text-xl font-extrabold mb-3 mt-5 text-amber-400 border-b pb-1.5 border-amber-500/25 flex items-center gap-2;
   }
-  .markdown-body h3 {
-    @apply text-lg font-bold mb-2 mt-4 text-gray-800;
+  .dark .markdown-body h3,
+  :root:not(.light) .markdown-body h3 {
+    @apply text-lg font-bold mb-2 mt-4 text-cyan-300;
   }
-  .markdown-body p {
-    @apply mb-4 text-gray-700;
+  .dark .markdown-body p,
+  :root:not(.light) .markdown-body p {
+    @apply mb-4 text-slate-200 leading-relaxed;
   }
-  .markdown-body ul {
-    @apply list-disc pl-6 mb-4 space-y-1;
+  .dark .markdown-body ul,
+  :root:not(.light) .markdown-body ul {
+    @apply list-disc pr-6 mb-4 space-y-1.5 text-slate-200;
   }
-  .markdown-body ol {
-    @apply list-decimal pl-6 mb-4 space-y-1;
+  .dark .markdown-body ol,
+  :root:not(.light) .markdown-body ol {
+    @apply list-decimal pr-6 mb-4 space-y-1.5 text-slate-200;
   }
-  .markdown-body code {
-    @apply bg-gray-100 px-1.5 py-0.5 rounded text-sm font-mono text-pink-600;
+  .dark .markdown-body code,
+  :root:not(.light) .markdown-body code {
+    @apply bg-[#050D1A] px-2 py-0.5 rounded text-sm font-mono text-amber-300 border border-amber-500/30;
   }
-  .markdown-body pre {
-    @apply bg-gray-900 text-gray-100 p-4 rounded-xl overflow-x-auto mb-4 font-mono text-sm;
+  .dark .markdown-body pre,
+  :root:not(.light) .markdown-body pre {
+    @apply bg-[#050D1A] text-cyan-200 p-4 rounded-xl overflow-x-auto mb-4 font-mono text-sm border border-amber-500/25;
   }
-  .markdown-body blockquote {
-    @apply border-l-4 border-blue-500 pl-4 italic text-gray-600 mb-4;
+  .dark .markdown-body blockquote,
+  :root:not(.light) .markdown-body blockquote {
+    @apply border-r-4 border-amber-500 pr-4 italic text-amber-200/90 my-4 bg-[#0B1A33]/50 py-2 rounded-l-lg;
   }
-  .markdown-body strong {
-    @apply font-bold text-gray-900;
+  .dark .markdown-body strong,
+  :root:not(.light) .markdown-body strong {
+    @apply font-bold text-amber-300;
   }
-  .markdown-body table {
-    @apply w-full border-collapse mb-4;
+  .dark .markdown-body table,
+  :root:not(.light) .markdown-body table {
+    @apply w-full border-collapse mb-4 rounded-lg overflow-hidden border border-amber-500/30;
   }
-  .markdown-body th, .markdown-body td {
-    @apply border border-gray-200 p-2 text-sm;
+  .dark .markdown-body th, .dark .markdown-body td,
+  :root:not(.light) .markdown-body th, :root:not(.light) .markdown-body td {
+    @apply border border-amber-500/20 p-2.5 text-sm;
   }
-  .markdown-body th {
-    @apply bg-gray-50 font-bold;
+  .dark .markdown-body th,
+  :root:not(.light) .markdown-body th {
+    @apply bg-[#0B1A33] text-amber-300 font-bold;
+  }
+  .dark .markdown-body td,
+  :root:not(.light) .markdown-body td {
+    @apply bg-[#071326]/60 text-slate-200;
+  }
+
+  /* Light mode (وضع النهار) markdown styling */
+  .light .markdown-body {
+    color: #0F172A;
+  }
+  .light .markdown-body .katex {
+    direction: ltr !important;
+    unicode-bidi: isolate;
+    color: #92400E;
+  }
+  .light .markdown-body .katex-display {
+    @apply my-4 overflow-x-auto p-2 bg-amber-50/70 rounded-xl border border-amber-300;
+    direction: ltr !important;
+  }
+  .light .markdown-body h1 {
+    @apply text-2xl font-black mb-4 mt-6 text-amber-800;
+  }
+  .light .markdown-body h2 {
+    @apply text-xl font-extrabold mb-3 mt-5 text-amber-700 border-b pb-1.5 border-amber-200 flex items-center gap-2;
+  }
+  .light .markdown-body h3 {
+    @apply text-lg font-bold mb-2 mt-4 text-sky-800;
+  }
+  .light .markdown-body p {
+    @apply mb-4 text-slate-700 leading-relaxed;
+  }
+  .light .markdown-body ul {
+    @apply list-disc pr-6 mb-4 space-y-1.5 text-slate-700;
+  }
+  .light .markdown-body ol {
+    @apply list-decimal pr-6 mb-4 space-y-1.5 text-slate-700;
+  }
+  .light .markdown-body code {
+    @apply bg-amber-50 px-2 py-0.5 rounded text-sm font-mono text-amber-900 border border-amber-200;
+  }
+  .light .markdown-body pre {
+    @apply bg-slate-900 text-cyan-200 p-4 rounded-xl overflow-x-auto mb-4 font-mono text-sm border border-slate-700;
+  }
+  .light .markdown-body blockquote {
+    @apply border-r-4 border-amber-500 pr-4 italic text-amber-900 my-4 bg-amber-50/80 py-2 rounded-l-lg;
+  }
+  .light .markdown-body strong {
+    @apply font-bold text-amber-900;
+  }
+  .light .markdown-body table {
+    @apply w-full border-collapse mb-4 rounded-lg overflow-hidden border border-slate-200 shadow-2xs;
+  }
+  .light .markdown-body th, .light .markdown-body td {
+    @apply border border-slate-200 p-2.5 text-sm;
+  }
+  .light .markdown-body th {
+    @apply bg-amber-100/70 text-amber-950 font-bold;
+  }
+  .light .markdown-body td {
+    @apply bg-white text-slate-700;
   }
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbar with Pharaonic Amber/Gold */
 ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(7, 19, 38, 0.6);
 }
 ::-webkit-scrollbar-thumb {
-  background: #E2E8F0;
+  background: rgba(217, 119, 6, 0.45);
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #CBD5E1;
+  background: rgba(245, 158, 11, 0.8);
+}
+
+.light ::-webkit-scrollbar-track {
+  background: rgba(241, 245, 249, 0.8);
+}
+.light ::-webkit-scrollbar-thumb {
+  background: rgba(217, 119, 6, 0.35);
+}
+.light ::-webkit-scrollbar-thumb:hover {
+  background: rgba(217, 119, 6, 0.7);
 }
 

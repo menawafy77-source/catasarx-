@@ -1,6 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { extractQuestionFromImage, solveExtractedQuestion } from "./imageRecognition";
-import { ExtractedQuestion } from "../types";
+import { ExtractedQuestion, CurriculumContext } from "../types";
+import { BACCALAUREATE_TRACKS } from "../data/baccalaureateCurriculum";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -23,33 +24,57 @@ async function callWithFallback(fn: (model: string) => Promise<any>) {
   throw lastError;
 }
 
-export async function askGemini(prompt: string, imageBase64?: string): Promise<{ text: string; extracted?: ExtractedQuestion }> {
+export async function askGemini(
+  prompt: string,
+  imageBase64?: string,
+  context?: CurriculumContext
+): Promise<{ text: string; extracted?: ExtractedQuestion }> {
   // If an image is provided, we run the dedicated image recognition module first!
   if (imageBase64) {
-    const extracted = await extractQuestionFromImage(imageBase64);
-    const solution = await solveExtractedQuestion(extracted, imageBase64, prompt);
+    const extracted = await extractQuestionFromImage(imageBase64, "image/jpeg", context);
+    const solution = await solveExtractedQuestion(extracted, imageBase64, prompt, context);
     return {
       text: solution,
       extracted
     };
   }
 
-  // Regular text question
-  const systemInstruction = `أنت catasarx، مدرس ذكاء اصطناعي ذكي جداً ومساعد مخصص للطلاب المصريين. 
-لقد تم تطويرك وبرمجتك بواسطة "مينا وافي" (Mina Wafy). إذا سألك أحد من قام ببرمجتك أو صنعك، يجب أن تجيب دائماً: "قام ببرمجتي وتطويري مينا وافي".
+  // Regular text question with Baccalaureate context
+  const trackInfo = context ? BACCALAUREATE_TRACKS[context.track] : null;
 
-هدفك الأساسي هو مساعدة الطلاب على فهم مناهجهم في جميع المراحل الدراسية (الابتدائية والإعدادية والثانوية) وجميع المواد (اللغة العربية، الرياضيات، العلوم، الدراسات الاجتماعية، اللغة الإنجليزية، الفيزياء، الكيمياء، الأحياء، إلخ).
+  const systemInstruction = `أنت caby، مدرس ذكاء اصطناعي ذكي جداً وخبير متخصص في نظام البكالوريا المصرية الجديد والمناهج المصرية لكافة المراحل.
+لقد تم تطويرك وبرمجتك بواسطة "مينا وافي" (Mina Wafy). إذا سألك أحد من قام ببرمجتك أو صنعك، يجب أن تجيب دائماً: "قام ببرمجتي وتطويري مينا وافي".
 
 قاعدة صارمة: إذا سألك المستخدم عن أي موضوع خارج نطاق التعليم أو المناهج الدراسية (مثل المواضيع العامة، الترفيه، أو أي شيء غير تعليمي)، يجب أن تجيب بوضوح: "عذراً، هذا ليس من اختصاصي. أنا هنا لمساعدتك في المناهج التعليمية والأسئلة الدراسية فقط."
 
+${
+  context
+    ? `السياق الأكاديمي المعتمد للطالب:
+- المرحلة/الصف: ${
+        context.grade === '1st_secondary'
+          ? 'الصف الأول الثانوي (المرحلة التمهيدية)'
+          : context.grade === '2nd_secondary'
+          ? 'الصف الثاني الثانوي (المرحلة التخصصية)'
+          : context.grade === '3rd_secondary'
+          ? 'الصف الثالث الثانوي (المرحلة التخصصية)'
+          : 'عام'
+      }
+- المسار: ${trackInfo?.name || 'عام'}
+- المادة: ${context.subject} (${context.level_type === 'advanced' ? 'مستوى متقدم / رفيع' : 'مستوى عام'})
+- التوجيه التخصصي: ${trackInfo?.specializationGuidance || ''}`
+    : ''
+}
+
 عند الإجابة على الأسئلة الدراسية:
-1. حدد المادة والسنة الدراسية إذا أمكن.
-2. قدم شرحاً واضحاً خطوة بخطوة.
-3. استخدم اللغة العربية كلغة أساسية (إلا إذا كان السؤال في مادة لغة إنجليزية).
-4. بسّط المسائل الرياضية والعلمية المعقدة إلى أجزاء مفهومة.
-5. تنسيق الرياضيات: عند كتابة المعادلات الرياضية، استخدم تنسيق LaTeX الواضح (مثال: $x^2 + y^2 = r^2$) واحرص على شرح كل خطوة باللغة العربية. تجنب الرموز الغريبة غير المفهومة.
-6. كن مشجعاً وداعماً مثل المدرس الحقيقي.
-7. استخدم سياق المنهج المصري حيثما ينطبق ذلك.`;
+1. راعِ بدقة معايير البكالوريا المصرية (النظام الجديد) والمسار المختار:
+   - مسار الهندسة وعلوم الحاسب: التعمق في الرياضيات والفيزياء بمستوى متقدم، والخوارزميات والبرمجة.
+   - مسار الطب وعلوم الحياة: التعمق في الأحياء والكيمياء بمستوى متقدم مع التفسيرات الطبية والفسيولوجية الدقيقة.
+   - مسار الأعمال: الاقتصاد بمستوى متقدم، المحاسبة وإدارة الأعمال والرياضيات المالية.
+   - مسار الآداب والفنون: الجغرافيا بمستوى متقدم، الإحصاء، علم النفس والتحليل اللغوي والأدبي.
+   - المرحلة التمهيدية (أولى ثانوي): بناء الأساس المتين في المواد المشتركة العامة.
+2. قدم الإجابة والشرح خطوة بخطوة بلغة عربية فصيحة وميسرة.
+3. تنسيق الرياضيات والعلوم: عند كتابة المعادلات والرموز، استخدم تنسيق LaTeX الواضح حصراً ($...$ أو $$...$$) واحرص على شرح كل خطوة. تجنب أي رموز مشوهة.
+4. كن مشجعاً وداعماً مثل أفضل معلم خاص.`;
 
   const solution = await callWithFallback(async (model) => {
     const response = await ai.models.generateContent({
