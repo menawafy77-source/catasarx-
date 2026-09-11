@@ -7,33 +7,29 @@ export default function Footer() {
   const [modalContent, setModalContent] = useState<{ title: string; text: string; icon: 'privacy' | 'contact' } | null>(null);
 
   const handlePrivacyClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    const msg = 'سياسة الخصوصية: نحترم خصوصية بياناتك ولا نشارك محادثاتك مع أطراف خارجية.';
-    try {
-      alert(msg);
-    } catch {
-      // In case iframe restricts modal alerts
-      setModalContent({
-        title: 'سياسة الخصوصية',
-        text: msg,
-        icon: 'privacy'
-      });
+    const privacyEl = document.getElementById('privacy');
+    if (privacyEl) {
+      privacyEl.scrollIntoView({ behavior: 'smooth' });
     }
+    const msg = 'سياسة الخصوصية: نلتزم في CATA SARX بحماية خصوصية بياناتك وملفات تعريف الارتباط وفق سياسات Google AdSense ولا نشارك بياناتك مع أي طرف ثالث.';
+    setModalContent({
+      title: 'سياسة الخصوصية',
+      text: msg,
+      icon: 'privacy'
+    });
   };
 
   const handleContactClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    const msg = 'للتواصل والدعم الفني: support@caby.com';
-    try {
-      alert(msg);
-    } catch {
-      // In case iframe restricts modal alerts
-      setModalContent({
-        title: 'اتصل بنا',
-        text: msg,
-        icon: 'contact'
-      });
+    const contactEl = document.getElementById('contact');
+    if (contactEl) {
+      contactEl.scrollIntoView({ behavior: 'smooth' });
     }
+    const msg = 'للتواصل والدعم الفني الرسمي لمنصة CATA SARX عبر البريد الإلكتروني: menawafy77@gmail.com';
+    setModalContent({
+      title: 'اتصل بنا',
+      text: msg,
+      icon: 'contact'
+    });
   };
 
   return (
@@ -41,11 +37,10 @@ export default function Footer() {
       <footer className={`w-full mt-6 py-4 text-center text-xs transition-colors ${
         isDark ? 'text-slate-400' : 'text-slate-600'
       }`}>
-        <p className={`font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>© 2026 CABY. جميع الحقوق محفوظة.</p>
+        <p className={`font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>© 2026 CATA SARX. جميع الحقوق محفوظة.</p>
         <p className="mt-1 flex items-center justify-center gap-3">
           <a
-            href="#privacy"
-            onClick={handlePrivacyClick}
+            href="privacy.html"
             className={`font-medium transition-colors cursor-pointer ${
               isDark ? 'text-amber-300 hover:text-amber-200' : 'text-amber-800 hover:text-amber-950'
             }`}
@@ -54,8 +49,16 @@ export default function Footer() {
           </a>
           <span className={isDark ? 'text-amber-500/40' : 'text-amber-700/40'}>|</span>
           <a
-            href="#contact"
-            onClick={handleContactClick}
+            href="about.html"
+            className={`font-medium transition-colors cursor-pointer ${
+              isDark ? 'text-amber-300 hover:text-amber-200' : 'text-amber-800 hover:text-amber-950'
+            }`}
+          >
+            عن المنصة
+          </a>
+          <span className={isDark ? 'text-amber-500/40' : 'text-amber-700/40'}>|</span>
+          <a
+            href="contact.html"
             className={`font-medium transition-colors cursor-pointer ${
               isDark ? 'text-amber-300 hover:text-amber-200' : 'text-amber-800 hover:text-amber-950'
             }`}
