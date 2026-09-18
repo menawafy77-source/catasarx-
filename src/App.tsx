@@ -198,7 +198,7 @@ export default function App() {
   const isQuotaDepleted = userCredits.questionsLeft <= 0;
 
   return (
-    <div className={`flex flex-col h-screen font-sans relative transition-colors duration-300 ${
+    <div className={`flex flex-col h-[760px] max-h-[88vh] min-h-[560px] rounded-2xl overflow-hidden shadow-xl border border-amber-500/30 font-sans relative transition-colors duration-300 ${
       isDark 
         ? 'bg-gradient-to-b from-[#061122] via-[#050D1A] to-[#040A14] text-slate-100 selection:bg-amber-500/30 selection:text-amber-200' 
         : 'bg-gradient-to-b from-slate-100 via-amber-50/30 to-slate-100 text-slate-900 selection:bg-amber-400/40 selection:text-amber-950'
@@ -226,7 +226,7 @@ export default function App() {
             <div className="flex items-center gap-1.5">
               <h1 className={`text-xl font-black tracking-tight leading-none ${
                 isDark ? 'text-amber-300' : 'text-amber-800'
-              }`}>caby</h1>
+              }`}>CATA SARX</h1>
               <span className={`px-2 py-0.5 text-[10.5px] font-bold rounded-md border ${
                 isDark 
                   ? 'bg-amber-500/15 text-amber-300 border-amber-500/30' 

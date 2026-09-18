@@ -1,32 +1,186 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>caby - المساعد التعليمي الذكي</title>
-    <meta name="description" content="منصة caby - المساعد التعليمي المبتكر القائم على تكنولوجيا الذكاء الاصطناعي لحل وتفسير الأسئلة والمناهج الدراسية لطلاب البكالوريا المصرية خطوة بخطوة." />
-    <meta property="og:title" content="caby - المساعد التعليمي الذكي" />
-    <meta property="og:description" content="منصة caby - المساعد التعليمي المبتكر القائم على تكنولوجيا الذكاء الاصطناعي لحل وتفسير الأسئلة والمناهج الدراسية لطلاب البكالوريا المصرية خطوة بخطوة." />
-    
-    <!-- إثبات ملكية Google Search Console -->
-    <meta name="google-site-verification" content="googled2f0c1be3021ade6" />
-    
-    <!-- كود Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9795352744409668" crossorigin="anonymous"></script>
-  </head>
-  <body>
-    <div id="root"></div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CATA SARX - معلم الذكاء الاصطناعي الذكي</title>
+  <meta name="description" content="منصة CATA SARX التعليمية القائمة على الذكاء الاصطناعي لحل وتفسير الأسئلة الدراسية وشرح المناهج." />
+  <meta property="og:title" content="CATA SARX - معلم الذكاء الاصطناعي الذكي" />
+  <meta property="og:description" content="منصة CATA SARX التعليمية القائمة على الذكاء الاصطناعي لحل وتفسير الأسئلة الدراسية وشرح المناهج." />
+  
+  <!-- إثبات ملكية Google Search Console -->
+  <meta name="google-site-verification" content="googled2f0c1be3021ade6" />
 
-    <!-- الفوتر في أسفل الشات مباشرة -->
-    <footer style="text-align: center; padding: 10px; font-size: 12px; color: #777;">
-      <p>© 2026 CATA SARX. جميع الحقوق محفوظة.</p>
-      <div>
-        <a href="privacy.html" style="color: #d97706; text-decoration: none; margin: 0 5px;">سياسة الخصوصية</a> | 
-        <a href="about.html" style="color: #d97706; text-decoration: none; margin: 0 5px;">عن المنصة</a> | 
-        <a href="contact.html" style="color: #d97706; text-decoration: none; margin: 0 5px;">اتصل بنا</a>
+  <!-- كود Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9795352744409668" crossorigin="anonymous"></script>
+
+  <style>
+    :root {
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --primary: #d97706;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* الهيدر العلوي */
+    header.site-header {
+      background: var(--card-bg);
+      padding: 15px 20px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    /* الحاوية الرئيسية */
+    main.site-main {
+      max-width: 860px;
+      margin: 20px auto;
+      padding: 0 15px;
+      flex: 1;
+      width: 100%;
+    }
+
+    /* قسم التعريف والترحيب */
+    .hero {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .hero h1 {
+      margin-top: 0;
+      font-size: 1.5rem;
+      color: var(--text-main);
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 0;
+    }
+
+    /* بطاقات المقالات الدليلية لتزويد جودة المحتوى لـ AdSense */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .feature-card h3 {
+      margin-top: 0;
+      font-size: 1.1rem;
+      color: var(--primary);
+    }
+
+    .feature-card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 0;
+    }
+
+    /* حاوية واجهة الشات */
+    #chat-container {
+      margin-bottom: 25px;
+      width: 100%;
+    }
+
+    /* الفوتر السفلي */
+    footer.site-footer {
+      background: var(--card-bg);
+      border-top: 1px solid #e2e8f0;
+      padding: 15px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    footer.site-footer a {
+      color: var(--primary);
+      text-decoration: none;
+      margin: 0 8px;
+    }
+
+    footer.site-footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="logo">CATA SARX</div>
+    <span style="font-size: 0.85rem; color: #64748b;">المساعد التعليمي الذكي</span>
+  </header>
+
+  <main class="site-main">
+    <!-- قسم تعريفي محتوى عالي الجودة -->
+    <section class="hero">
+      <h1>مرحباً بك في منصة CATA SARX الذكية</h1>
+      <p>
+        منصة <strong>CATA SARX</strong> هي معلمك الشخصي القائم على أحدث تقنيات الذكاء الاصطناعي. نساعدك في فهم وتفسير المواد الدراسية، حل الأسئلة الصعبة خطوة بخطوة، وتبسيط المفاهيم المعقدة لمختلف المراحل التعليمية.
+      </p>
+    </section>
+
+    <!-- أقسام محتوى إضافية لرفع تقييم AdSense -->
+    <div class="features-grid">
+      <div class="feature-card">
+        <h3>شروحات تفصيلية</h3>
+        <p>إجابات دقيقة تشمل القوانين والخطوات التفصيلية للمسائل العلمية والرياضية.</p>
       </div>
-    </footer>
+      <div class="feature-card">
+        <h3>دعم المسارات التعليمية</h3>
+        <p>تغطية شاملة للمناهج الدراسية ونظام البكالوريا للتركيز على نقاط فهم الطالب.</p>
+      </div>
+    </div>
 
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+    <!-- منطقة واجهة الشات الخاصة بك -->
+    <section id="chat-container">
+      <div id="root"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>© 2026 CATA SARX. جميع الحقوق محفوظة.</p>
+    <div>
+      <a href="privacy.html" target="_blank">سياسة الخصوصية</a> | 
+      <a href="about.html" target="_blank">عن المنصة</a> | 
+      <a href="contact.html" target="_blank">اتصل بنا</a>
+    </div>
+  </footer>
+
+  <script type="module" src="/src/main.tsx"></script>
+</body>
 </html>
