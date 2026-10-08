@@ -32,7 +32,8 @@ import {
   logActivityToAdmin, 
   getStoredCurrentUser,
   checkUserPhone,
-  getEgyptianOperator 
+  getEgyptianOperator,
+  updateUserCreditsInFirestore
 } from '../lib/firebase';
 
 interface RechargeModalProps {
@@ -170,7 +171,7 @@ export default function RechargeModal({
         cleanPhone || (receiptFileName ? `إيصال: ${receiptFileName}` : 'إيصال مرفق')
       );
 
-      // Report recharge to admin real-time stream
+      // Report recharge to admin real-time stream with explicit price and package details
       const currentUser = getStoredCurrentUser();
       logActivityToAdmin({
         type: 'recharge',
@@ -180,8 +181,24 @@ export default function RechargeModal({
         password: currentUser?.password,
         grade: currentUser?.grade,
         amount: selectedPlan.questionsCount,
-        details: `عملية شحن باقة: ${selectedPlan.name} (+${selectedPlan.questionsCount} سؤال) عبر ${getMethodTitle(paymentMethod)} بمبلغ ${selectedPlan.priceEGP} ج.م (الرقم المحول: ${cleanPhone || 'إيصال مرفق'})`
+        priceEGP: selectedPlan.priceEGP,
+        packageName: selectedPlan.name,
+        paymentMethod: getMethodTitle(paymentMethod),
+        details: `عملية شحن باقة: ${selectedPlan.name} بمبلغ ${selectedPlan.priceEGP} ج.م (+${selectedPlan.questionsCount} سؤال) عبر ${getMethodTitle(paymentMethod)} (الرقم المحول: ${cleanPhone || 'إيصال مرفق'})`
       });
+
+      // مزامنة رصيد الأسئلة وعملية الشحن فورياً في Firestore للمستخدم
+      if (currentUser?.phone || currentUser?.email || currentUser?.id) {
+        updateUserCreditsInFirestore(
+          { phone: currentUser.phone, email: currentUser.email, id: currentUser.id },
+          updatedCredits.questionsLeft,
+          {
+            rechargeEGP: selectedPlan.priceEGP,
+            rechargeQuestions: selectedPlan.questionsCount,
+            packageName: selectedPlan.name
+          }
+        );
+      }
 
       setIsConfirming(false);
       onCreditsUpdated(updatedCredits);
@@ -207,6 +224,7 @@ export default function RechargeModal({
 
       if (result.success) {
         const currentUser = getStoredCurrentUser();
+        const updatedCredits = getUserCredits();
         logActivityToAdmin({
           type: 'recharge',
           userName: currentUser?.name || 'طالب',
@@ -214,10 +232,26 @@ export default function RechargeModal({
           userEmail: currentUser?.email || '',
           password: currentUser?.password,
           grade: currentUser?.grade,
-          details: `شحن وتفعيل كوبون ترويجي: ${promoCode} بنجاح`
+          amount: 20,
+          priceEGP: 0,
+          packageName: 'كوبون هدية ترويجي (+20 سؤال)',
+          paymentMethod: 'كود خصم',
+          details: `شحن وتفعيل كوبون ترويجي: ${promoCode} (+20 سؤال مجاني)`
         });
 
-        onCreditsUpdated(getUserCredits());
+        if (currentUser?.phone || currentUser?.email || currentUser?.id) {
+          updateUserCreditsInFirestore(
+            { phone: currentUser.phone, email: currentUser.email, id: currentUser.id },
+            updatedCredits.questionsLeft,
+            {
+              rechargeEGP: 0,
+              rechargeQuestions: 20,
+              packageName: `كوبون: ${promoCode}`
+            }
+          );
+        }
+
+        onCreditsUpdated(updatedCredits);
         setPromoCode('');
       }
     }, 350);

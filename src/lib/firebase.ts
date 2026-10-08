@@ -9,7 +9,8 @@ import {
   setDoc,
   doc, 
   updateDoc,
-  where
+  where,
+  increment
 } from 'firebase/firestore';
 import firebaseConfig from '../../firebase-applet-config.json';
 
@@ -38,6 +39,11 @@ export interface UserAccount {
   lastLoginAt?: string;
   questionsCount?: number;
   questionsLeft?: number;
+  totalRechargedEGP?: number;
+  totalQuestionsRecharged?: number;
+  lastRechargeAmountEGP?: number;
+  lastRechargePackage?: string;
+  lastRechargeDate?: string;
   role?: 'admin' | 'user';
   isUnlimited?: boolean;
 }
@@ -51,8 +57,37 @@ export interface ActivityLog {
   password?: string;
   grade?: string;
   details: string;
-  amount?: number;
+  amount?: number; // عدد الأسئلة المشحونة (+20, +50, +100, +250)
+  priceEGP?: number; // المبلغ المدفوع بالجنيه المصري (20, 50, 100, 250)
+  packageName?: string;
+  paymentMethod?: string;
   timestamp: string;
+}
+
+/**
+ * دالة استخراج وتنسيق بيانات عملية الشحن (المبلغ بالجنيه + عدد الأسئلة)
+ * تدعم السجلات الجديدة والمحفوظة مسبقاً في Firestore
+ */
+export function extractRechargeInfo(details?: string, priceEGP?: number, amount?: number): { price: number; questions: number } {
+  let price = priceEGP || 0;
+  let questions = amount || 0;
+
+  if (details) {
+    if (!price) {
+      const matchPrice = details.match(/بمبلغ\s*(\d+)\s*ج\.م/) || details.match(/(\d+)\s*ج\.م/);
+      if (matchPrice) {
+        price = parseInt(matchPrice[1], 10);
+      }
+    }
+    if (!questions) {
+      const matchQuestions = details.match(/\+(\d+)\s*سؤال/) || details.match(/(\d+)\s*سؤال/);
+      if (matchQuestions) {
+        questions = parseInt(matchQuestions[1], 10);
+      }
+    }
+  }
+
+  return { price, questions };
 }
 
 const LOCAL_STORAGE_USER_KEY = 'shomi_current_user';
@@ -133,6 +168,8 @@ export const saveRegisteredUser = async (data: {
     lastLoginAt: new Date().toISOString(),
     questionsCount: 0,
     questionsLeft: isAdmin ? 999999 : 10,
+    totalRechargedEGP: 0,
+    totalQuestionsRecharged: 0,
     role: isAdmin ? 'admin' : 'user',
     isUnlimited: isAdmin
   };
@@ -163,6 +200,10 @@ export const saveRegisteredUser = async (data: {
       userRecord.id = existingDocId;
       userRecord.questionsCount = existingData.questionsCount ?? 0;
       userRecord.questionsLeft = isAdmin ? 999999 : (existingData.questionsLeft ?? 10);
+      userRecord.totalRechargedEGP = existingData.totalRechargedEGP ?? 0;
+      userRecord.totalQuestionsRecharged = existingData.totalQuestionsRecharged ?? 0;
+      userRecord.lastRechargeAmountEGP = existingData.lastRechargeAmountEGP;
+      userRecord.lastRechargePackage = existingData.lastRechargePackage;
       userRecord.role = isAdmin ? 'admin' : (existingData.role ?? 'user');
       userRecord.isUnlimited = isAdmin;
       if (!password && existingData.password) {
@@ -175,6 +216,8 @@ export const saveRegisteredUser = async (data: {
         email: userRecord.email,
         password: userRecord.password,
         grade: userRecord.grade,
+        questionsLeft: userRecord.questionsLeft,
+        totalRechargedEGP: userRecord.totalRechargedEGP,
         lastLoginAt: new Date().toISOString()
       });
     } else {
@@ -387,5 +430,72 @@ export const fetchActivityLogsFromFirestore = async (): Promise<ActivityLog[]> =
   } catch (err) {
     console.error('Error fetching activity logs from Firestore:', err);
     return [];
+  }
+};
+
+/**
+ * تحديث رصيد الأسئلة وعمليات الشحن في Firestore فوراً للمستخدم
+ */
+export const updateUserCreditsInFirestore = async (
+  userIdentifier: { phone?: string; email?: string; id?: string },
+  newQuestionsLeft: number,
+  options?: {
+    questionsCountIncrement?: number;
+    rechargeEGP?: number;
+    rechargeQuestions?: number;
+    packageName?: string;
+  }
+): Promise<void> => {
+  try {
+    const usersRef = collection(db, 'users');
+    let docToUpdateId = userIdentifier.id;
+
+    if (!docToUpdateId) {
+      if (userIdentifier.phone) {
+        const cleanPhone = normalizePhone(userIdentifier.phone);
+        const q = query(usersRef, where('phone', '==', cleanPhone));
+        const snap = await getDocs(q);
+        if (!snap.empty) {
+          docToUpdateId = snap.docs[0].id;
+        }
+      }
+      if (!docToUpdateId && userIdentifier.email) {
+        const q = query(usersRef, where('email', '==', userIdentifier.email.trim()));
+        const snap = await getDocs(q);
+        if (!snap.empty) {
+          docToUpdateId = snap.docs[0].id;
+        }
+      }
+    }
+
+    if (docToUpdateId) {
+      const docRef = doc(db, 'users', docToUpdateId);
+      const updateData: Record<string, any> = {
+        questionsLeft: newQuestionsLeft,
+        lastActiveAt: new Date().toISOString()
+      };
+
+      if (options?.questionsCountIncrement) {
+        updateData.questionsCount = increment(options.questionsCountIncrement);
+      }
+
+      if (options?.rechargeEGP) {
+        updateData.totalRechargedEGP = increment(options.rechargeEGP);
+        updateData.lastRechargeAmountEGP = options.rechargeEGP;
+        updateData.lastRechargeDate = new Date().toISOString();
+      }
+
+      if (options?.rechargeQuestions) {
+        updateData.totalQuestionsRecharged = increment(options.rechargeQuestions);
+      }
+
+      if (options?.packageName) {
+        updateData.lastRechargePackage = options.packageName;
+      }
+
+      await updateDoc(docRef, updateData);
+    }
+  } catch (err) {
+    console.warn('Could not sync user credits to Firestore:', err);
   }
 };

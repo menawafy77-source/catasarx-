@@ -33,7 +33,13 @@ import RechargeModal from './components/RechargeModal';
 import HistoryModal from './components/HistoryModal';
 import SignupModal from './components/SignupModal';
 import AdminDashboardModal from './components/AdminDashboardModal';
-import { getStoredCurrentUser, clearStoredCurrentUser, ADMIN_EMAIL, UserAccount } from './lib/firebase';
+import { 
+  getStoredCurrentUser, 
+  clearStoredCurrentUser, 
+  ADMIN_EMAIL, 
+  UserAccount,
+  updateUserCreditsInFirestore 
+} from './lib/firebase';
 import { extractQuestionFromImage, solveExtractedQuestion, askGemini } from './services/gemini';
 import { Message, ProcessingPhase, ExtractedQuestion, CurriculumContext, UserCredits } from './types';
 import { getDefaultCurriculumContext } from './data/baccalaureateCurriculum';
@@ -170,7 +176,17 @@ export default function App() {
 
       // 2. Deduct credit for standard users
       deductQuestionCredit();
-      setUserCredits(getUserCredits());
+      const updatedCreds = getUserCredits();
+      setUserCredits(updatedCreds);
+
+      // مزامنة الرصيد المتبقي مع قاعدة بيانات Firestore للمستخدم فورياً
+      if (currentUser?.phone || currentUser?.email || currentUser?.id) {
+        updateUserCreditsInFirestore(
+          { phone: currentUser.phone, email: currentUser.email, id: currentUser.id },
+          updatedCreds.questionsLeft,
+          { questionsCountIncrement: 1 }
+        );
+      }
     }
 
     const userMessageId = 'user_' + Date.now();
