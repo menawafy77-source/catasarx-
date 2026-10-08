@@ -22,6 +22,11 @@
     unicode-bidi: isolate;
     color: #FEF3C7;
   }
+  /* Prevent duplicated symbols when copying KaTeX text from screen */
+  .katex .katex-mathml {
+    user-select: none !important;
+    -webkit-user-select: none !important;
+  }
   .dark .markdown-body .katex-display,
   :root:not(.light) .markdown-body .katex-display {
     @apply my-4 overflow-x-auto p-2 bg-[#050D1A]/70 rounded-xl border border-amber-500/20;

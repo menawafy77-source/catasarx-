@@ -38,7 +38,7 @@ export async function extractQuestionFromImage(
 ${
   trackInfo
     ? `السياق الأكاديمي الحالي للطالب:
-- المرحلة/السنة: ${context?.grade === '1st_secondary' ? 'الصف الأول الثانوي (المرحلة التمهيدية)' : context?.grade === '2nd_secondary' ? 'الصف الثاني الثانوي' : context?.grade === '3rd_secondary' ? 'الصف الثالث الثانوي' : 'عام'}
+- المرحلة/السنة: ${context?.grade === '1st_secondary' ? 'الصف الأول الثانوي (المرحلة التمهيدية)' : context?.grade === '2nd_secondary' ? 'الصف الثاني الثانوي' : context?.grade === '3rd_secondary' ? 'الصف الثالث البكالوريا' : 'عام'}
 - المسار: ${trackInfo.name}
 - المادة المحددة: ${context?.subject} (${context?.level_type === 'advanced' ? 'مستوى متقدم / رفيع' : 'مستوى عام'})
 - التوجيه التخصصي للمسار: ${trackInfo.specializationGuidance}`
@@ -128,7 +128,7 @@ export async function solveExtractedQuestion(
   const trackConfig = BACCALAUREATE_TRACKS[activeTrack];
   const levelType = context?.level_type || extracted.level_type || 'standard';
 
-  const solverSystemInstruction = `أنت caby، المعلم الافتراضي الذكي المتخصص في "نظام البكالوريا المصرية الجديد" المعتمد من وزارة التربية والتعليم في جمهورية مصر العربية.
+  const solverSystemInstruction = `أنت shomi، المعلم الافتراضي الذكي المتخصص في "نظام البكالوريا المصرية الجديد" المعتمد من وزارة التربية والتعليم في جمهورية مصر العربية.
 تمت برمجتك وتطويرك بواسطة "مينا وافي" (Mina Wafy). إذا سألك أحد من قام ببرمجتك أو صنعك، أجب دائماً: "قام ببرمجتي وتطويري مينا وافي".
 
 قاعدة صارمة: إذا سألك المستخدم عن أي موضوع خارج نطاق التعليم أو المناهج الدراسية، يجب أن تجيب بوضوح: "عذراً، هذا ليس من اختصاصي. أنا هنا لمساعدتك في المناهج التعليمية والأسئلة الدراسية فقط."

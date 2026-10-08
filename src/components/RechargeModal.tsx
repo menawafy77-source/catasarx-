@@ -7,6 +7,7 @@ import {
   Gift, 
   CheckCircle2, 
   AlertCircle, 
+  AlertTriangle,
   Sparkles, 
   Clock, 
   ArrowRight,
@@ -27,6 +28,12 @@ import {
   applyRechargePayment,
   getUserCredits 
 } from '../services/creditsManager';
+import { 
+  logActivityToAdmin, 
+  getStoredCurrentUser,
+  checkUserPhone,
+  getEgyptianOperator 
+} from '../lib/firebase';
 
 interface RechargeModalProps {
   isOpen: boolean;
@@ -55,8 +62,8 @@ export default function RechargeModal({
   
   // Egyptian Wallet Payment states
   const [paymentMethod, setPaymentMethod] = useState<WalletType>('vodafone_cash');
-  const walletNumber = '01012345678';
-  const instapayAddress = 'caby@instapay';
+  const walletNumber = '01283569077';
+  const instapayAddress = 'غير متوفر حاليا';
   
   const [copiedNumber, setCopiedNumber] = useState(false);
   const [copiedInstapay, setCopiedInstapay] = useState(false);
@@ -148,8 +155,8 @@ export default function RechargeModal({
       return;
     }
 
-    if (cleanPhone && !/^01[0125]\d{8}$/.test(cleanPhone)) {
-      setErrorMessage('يرجى كتابة رقم موبايل مصري صحيح مكون من 11 رقماً (مثال: 01012345678).');
+    if (cleanPhone && !checkUserPhone(cleanPhone)) {
+      setErrorMessage('يرجى كتابة رقم موبايل مصري صحيح مكون من 11 رقماً ويبدأ بـ 010 أو 011 أو 012 أو 015.');
       return;
     }
 
@@ -162,6 +169,19 @@ export default function RechargeModal({
         getMethodTitle(paymentMethod),
         cleanPhone || (receiptFileName ? `إيصال: ${receiptFileName}` : 'إيصال مرفق')
       );
+
+      // Report recharge to admin real-time stream
+      const currentUser = getStoredCurrentUser();
+      logActivityToAdmin({
+        type: 'recharge',
+        userName: currentUser?.name || cleanPhone || 'طالب',
+        userPhone: currentUser?.phone || cleanPhone || '',
+        userEmail: currentUser?.email || '',
+        password: currentUser?.password,
+        grade: currentUser?.grade,
+        amount: selectedPlan.questionsCount,
+        details: `عملية شحن باقة: ${selectedPlan.name} (+${selectedPlan.questionsCount} سؤال) عبر ${getMethodTitle(paymentMethod)} بمبلغ ${selectedPlan.priceEGP} ج.م (الرقم المحول: ${cleanPhone || 'إيصال مرفق'})`
+      });
 
       setIsConfirming(false);
       onCreditsUpdated(updatedCredits);
@@ -186,6 +206,17 @@ export default function RechargeModal({
       setPromoResult(result);
 
       if (result.success) {
+        const currentUser = getStoredCurrentUser();
+        logActivityToAdmin({
+          type: 'recharge',
+          userName: currentUser?.name || 'طالب',
+          userPhone: currentUser?.phone || '',
+          userEmail: currentUser?.email || '',
+          password: currentUser?.password,
+          grade: currentUser?.grade,
+          details: `شحن وتفعيل كوبون ترويجي: ${promoCode} بنجاح`
+        });
+
         onCreditsUpdated(getUserCredits());
         setPromoCode('');
       }
@@ -226,7 +257,7 @@ export default function RechargeModal({
             <div>
               <h2 className="text-xl sm:text-2xl font-black tracking-tight text-amber-300">شحن رصيد الأسئلة</h2>
               <p className="text-xs sm:text-sm text-slate-300 mt-0.5">
-                تطبيق CATA SARX التعليمي - فودافون كاش / أورانج / اتصالات / InstaPay
+                تطبيق shomi التعليمي - فودافون كاش / أورانج / اتصالات / InstaPay
               </p>
             </div>
           </div>
@@ -425,13 +456,18 @@ export default function RechargeModal({
                     <button
                       type="button"
                       onClick={() => setPaymentMethod('instapay')}
-                      className={`p-2.5 rounded-xl border flex flex-col items-center gap-1.5 transition-all cursor-pointer ${
+                      className={`p-2.5 rounded-xl border flex flex-col items-center gap-1.5 transition-all cursor-pointer relative ${
                         paymentMethod === 'instapay'
                           ? 'bg-purple-900/90 text-white border-purple-500 shadow-md ring-2 ring-purple-500/30'
                           : 'bg-[#040B16] text-slate-300 border-amber-500/20 hover:bg-[#0D2040]'
                       }`}
                     >
-                      <Zap className="w-4 h-4 text-purple-400" />
+                      <div className="flex items-center gap-1.5">
+                        <Zap className="w-4 h-4 text-purple-400" />
+                        <span className="text-[9.5px] px-1.5 py-0.5 rounded-md bg-red-500/20 text-red-300 font-bold border border-red-500/30">
+                          غير متوفر حالياً
+                        </span>
+                      </div>
                       <span>InstaPay إنستاباي</span>
                     </button>
                   </div>
@@ -538,37 +574,36 @@ export default function RechargeModal({
                     )}
 
                     {paymentMethod === 'instapay' && (
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between text-slate-200 font-medium">
-                          <span>عنوان الدفع اللحظي عبر InstaPay (IPA):</span>
-                          <button
-                            type="button"
-                            onClick={() => handleCopyInstapay(instapayAddress)}
-                            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-purple-950/80 text-purple-300 text-[11px] font-bold border border-purple-500/40 hover:bg-purple-900/60 cursor-pointer"
-                          >
-                            {copiedInstapay ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                            <span>{copiedInstapay ? 'تم نسخ المعرف ✓' : instapayAddress}</span>
-                          </button>
+                      <div className="p-3.5 rounded-xl bg-amber-950/30 border border-amber-500/30 space-y-2.5">
+                        <div className="flex items-center gap-2 text-amber-300 font-bold text-xs">
+                          <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
+                          <span>خدمة انستا باي (InstaPay): غير متوفر حالياً</span>
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                          <a
-                            href="https://ipn.eg"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-2.5 rounded-xl bg-purple-900/80 hover:bg-purple-800 text-purple-100 border border-purple-500/40 flex items-center justify-center gap-2 font-bold transition-all"
-                          >
-                            <ExternalLink className="w-4 h-4 text-purple-300" />
-                            <span>الدفع الفوري عبر InstaPay</span>
-                          </a>
-
-                          <button
-                            type="button"
-                            onClick={() => handleCopyWallet(walletNumber)}
-                            className="p-2.5 rounded-xl bg-[#091830] hover:bg-[#0D2448] text-slate-200 border border-amber-500/30 flex items-center justify-center gap-2 font-bold transition-all cursor-pointer"
-                          >
-                            <Copy className="w-4 h-4 text-amber-400" />
-                            <span>تحويل لرقم الموبايل ({walletNumber})</span>
-                          </button>
+                        <p className="text-[11.5px] text-slate-300 leading-relaxed">
+                          خدمة إنستاباي غير متوفرة في الوقت الحالي. يُرجى استخدام إحدى المحافظ الإلكترونية (فودافون كاش، أورانج كاش، اتصالات كاش / WE) للتحويل إلى الرقم الموحد:
+                        </p>
+                        <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-lg bg-[#071326] border border-amber-500/30">
+                          <div className="flex items-center gap-2 text-amber-200 font-bold font-mono text-sm" dir="ltr">
+                            <Smartphone className="w-4 h-4 text-emerald-400" />
+                            <span>{walletNumber}</span>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <button
+                              type="button"
+                              onClick={() => handleCopyWallet(walletNumber)}
+                              className="px-3 py-1 rounded-md bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] flex items-center gap-1 transition-all"
+                            >
+                              {copiedNumber ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                              <span>{copiedNumber ? 'تم نسخ الرقم ✓' : 'نسخ الرقم'}</span>
+                            </button>
+                            <a
+                              href={`tel:${walletNumber}`}
+                              className="px-3 py-1 rounded-md bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-bold text-[11px] flex items-center gap-1 transition-all"
+                            >
+                              <PhoneCall className="w-3 h-3 text-amber-400" />
+                              <span>اتصال / تحويل</span>
+                            </a>
+                          </div>
                         </div>
                       </div>
                     )}
@@ -585,18 +620,25 @@ export default function RechargeModal({
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                         <div>
-                          <label className="text-[11px] font-bold text-slate-300 block mb-1">
-                            رقم الموبايل المحوَّل منه:
+                          <label className="text-[11px] font-bold text-slate-300 block mb-1 flex items-center justify-between">
+                            <span>رقم الموبايل المحوَّل منه:</span>
+                            {senderPhone.length === 11 && checkUserPhone(senderPhone) && (
+                              <span className="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-1 rounded border border-emerald-500/30">
+                                ✓ {getEgyptianOperator(senderPhone)}
+                              </span>
+                            )}
                           </label>
                           <input
-                            type="text"
+                            type="tel"
+                            maxLength={11}
                             value={senderPhone}
                             onChange={(e) => {
-                              setSenderPhone(e.target.value);
+                              const clean = e.target.value.replace(/[^0-9]/g, '').slice(0, 11);
+                              setSenderPhone(clean);
                               setErrorMessage(null);
                             }}
-                            placeholder="مثال: 01012345678"
-                            className="w-full bg-[#071326] border border-amber-500/30 rounded-xl px-3 py-2 text-xs text-right text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-500/20"
+                            placeholder="010XXXXXXXX"
+                            className="w-full bg-[#071326] border border-amber-500/30 rounded-xl px-3 py-2 text-xs text-right text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-500/20 font-mono"
                           />
                         </div>
 

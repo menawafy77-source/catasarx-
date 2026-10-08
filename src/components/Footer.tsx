@@ -11,7 +11,7 @@ export default function Footer() {
     if (privacyEl) {
       privacyEl.scrollIntoView({ behavior: 'smooth' });
     }
-    const msg = 'سياسة الخصوصية: نلتزم في CATA SARX بحماية خصوصية بياناتك وملفات تعريف الارتباط وفق سياسات Google AdSense ولا نشارك بياناتك مع أي طرف ثالث.';
+    const msg = 'سياسة الخصوصية: نلتزم في shomi بحماية خصوصية بياناتك وملفات تعريف الارتباط وفق سياسات Google AdSense ولا نشارك بياناتك مع أي طرف ثالث.';
     setModalContent({
       title: 'سياسة الخصوصية',
       text: msg,
@@ -24,7 +24,7 @@ export default function Footer() {
     if (contactEl) {
       contactEl.scrollIntoView({ behavior: 'smooth' });
     }
-    const msg = 'للتواصل والدعم الفني الرسمي لمنصة CATA SARX عبر البريد الإلكتروني: menawafy77@gmail.com';
+    const msg = 'للتواصل والدعم الفني الرسمي لمنصة shomi عبر البريد الإلكتروني: menawafy77@gmail.com';
     setModalContent({
       title: 'اتصل بنا',
       text: msg,
@@ -37,8 +37,19 @@ export default function Footer() {
       <footer className={`w-full mt-6 py-4 text-center text-xs transition-colors ${
         isDark ? 'text-slate-400' : 'text-slate-600'
       }`}>
-        <p className={`font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>© 2026 CATA SARX. جميع الحقوق محفوظة.</p>
-        <p className="mt-1 flex items-center justify-center gap-3">
+        <p className={`font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>© 2026 shomi. جميع الحقوق محفوظة.</p>
+        <p className="mt-1 flex items-center justify-center gap-3 flex-wrap">
+          <a
+            href="blog.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`font-medium transition-colors cursor-pointer ${
+              isDark ? 'text-amber-300 hover:text-amber-200' : 'text-amber-800 hover:text-amber-950'
+            }`}
+          >
+            طريقة الاستخدام والدفع
+          </a>
+          <span className={isDark ? 'text-amber-500/40' : 'text-amber-700/40'}>|</span>
           <a
             href="privacy.html"
             className={`font-medium transition-colors cursor-pointer ${

@@ -6,6 +6,7 @@ export interface SubjectOption {
   level_type: SubjectLevelType;
   levelLabel: string;
   isAdvanced: boolean;
+  category?: 'shared' | 'specialized'; // مشترك أو تخصصي
   topics?: string[];
 }
 
@@ -29,19 +30,19 @@ export interface TrackConfig {
 
 export const GRADES_LIST: { id: SecondaryGrade; name: string; subtitle: string }[] = [
   {
-    id: '1st_secondary',
-    name: 'الصف الأول الثانوي',
-    subtitle: 'المرحلة التمهيدية العامة'
+    id: '3rd_secondary',
+    name: 'الصف الثالث البكالوريا',
+    subtitle: 'المرحلة التخصصية المتقدمة والشهادة (المواد تضاف للمجموع)'
   },
   {
     id: '2nd_secondary',
     name: 'الصف الثاني الثانوي',
-    subtitle: 'المرحلة التخصصية (المسارات)'
+    subtitle: 'المرحلة التخصصية والمسارات (المواد تضاف للمجموع)'
   },
   {
-    id: '3rd_secondary',
-    name: 'الصف الثالث الثانوي',
-    subtitle: 'المرحلة التخصصية والشهادة'
+    id: '1st_secondary',
+    name: 'الصف الأول الثانوي',
+    subtitle: 'المرحلة التمهيدية العامة'
   },
   {
     id: 'other_grades',
@@ -59,16 +60,16 @@ export const BACCALAUREATE_TRACKS: Record<BaccalaureateTrack, TrackConfig> = {
     accentColor: 'indigo',
     badgeBg: 'bg-indigo-50 border-indigo-200',
     badgeText: 'text-indigo-700',
-    description: 'مواد أساسية عامة لبناء قاعدة قوية ومتكاملة قبل التوزيع على المسارات التخصصية.',
-    specializationGuidance: 'التركيز على المفاهيم التأسيسية الشاملة في المواد الأساسية (عربي، رياضيات، علوم، تاريخ، فلسفة، لغة أولى) وفق معايير وزارة التربية والتعليم.',
+    description: 'مواد أساسية لبناء قاعدة قوية ومتكاملة قبل التوزيع على المسارات التخصصية.',
+    specializationGuidance: 'التركيز على المفاهيم التأسيسية الشاملة في المواد الأساسية (عربي، لغة أولى، تاريخ مصري، رياضيات، علوم متكاملة، فلسفة).',
     subjectsByGrade: {
       '1st_secondary': [
-        { id: 'arabic', name: 'اللغة العربية', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'math', name: 'الرياضيات', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'integrated_science', name: 'العلوم المتكاملة', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'history', name: 'التاريخ', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'philosophy', name: 'الفلسفة والمنطق', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'english', name: 'اللغة الأجنبية الأولى (الإنجليزية)', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false }
+        { id: 'arabic_1st', name: 'اللغة العربية', level_type: 'standard', levelLabel: 'مشترك إجباري', isAdvanced: false, category: 'shared' },
+        { id: 'english_1st', name: 'اللغة الأجنبية الأولى', level_type: 'standard', levelLabel: 'مشترك إجباري', isAdvanced: false, category: 'shared' },
+        { id: 'history_1st', name: 'التاريخ المصري', level_type: 'standard', levelLabel: 'مشترك إجباري', isAdvanced: false, category: 'shared' },
+        { id: 'math_1st', name: 'الرياضيات', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false, category: 'specialized' },
+        { id: 'integrated_science_1st', name: 'العلوم المتكاملة', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false, category: 'specialized' },
+        { id: 'philosophy_1st', name: 'الفلسفة والمنطق', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false, category: 'specialized' }
       ]
     }
   },
@@ -76,29 +77,27 @@ export const BACCALAUREATE_TRACKS: Record<BaccalaureateTrack, TrackConfig> = {
   medical_and_life_sciences: {
     id: 'medical_and_life_sciences',
     name: 'مسار الطب وعلوم الحياة',
-    shortName: 'الطب والعلوم',
+    shortName: 'الطب وعلوم الحياة',
     iconName: 'HeartPulse',
     accentColor: 'emerald',
     badgeBg: 'bg-emerald-50 border-emerald-200',
     badgeText: 'text-emerald-700',
-    description: 'مسار متخصص للراغبين في كليات الطب البشري، طب الأسنان، الصيدلة، العلاج الطبيعي، والعلوم البيولوجية.',
-    specializationGuidance: 'التركيز المكثف على الفهم العميق لعلوم الأحياء والكيمياء بمستوى متقدم، التحليل الفسيولوجي والبيولوجيا الجزيئية، والتطبيقات الصيدلانية مع صياغة علمية دقيقة.',
+    description: 'مسار متخصص لكليات الطب، طب الأسنان، الصيدلة، العلاج الطبيعي والعلوم البيولوجية.',
+    specializationGuidance: 'في الصف الثالث البكالوريا: دراسة تخصصية بمستوى متقدم (رفيع) في الأحياء والكيمياء فقط. في الصف الثاني: التخصص في الفيزياء أو الرياضيات إلى جانب المواد المشتركة.',
     subjectsByGrade: {
       '2nd_secondary': [
-        { id: 'physics_std', name: 'الفيزياء', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'math_std', name: 'الرياضيات', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'biology_std', name: 'الأحياء التمهيدية', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'chemistry_std', name: 'الكيمياء التمهيدية', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'arabic', name: 'اللغة العربية (مشترك)', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'english', name: 'اللغة الأجنبية الأولى (مشترك)', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'history_shared', name: 'التاريخ (مشترك)', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false }
+        // المواد المشتركة (تضاف للمجموع)
+        { id: 'arabic_2nd_med', name: 'اللغة العربية', level_type: 'standard', levelLabel: 'مشترك إجباري', isAdvanced: false, category: 'shared' },
+        { id: 'english_2nd_med', name: 'اللغة الأجنبية الأولى', level_type: 'standard', levelLabel: 'مشترك إجباري', isAdvanced: false, category: 'shared' },
+        { id: 'history_2nd_med', name: 'التاريخ المصري', level_type: 'standard', levelLabel: 'مشترك إجباري', isAdvanced: false, category: 'shared' },
+        // مواد التخصص (الفيزياء أو الرياضيات)
+        { id: 'physics_2nd_med', name: 'الفيزياء', level_type: 'standard', levelLabel: 'مادة تخصص', isAdvanced: false, category: 'specialized' },
+        { id: 'math_2nd_med', name: 'الرياضيات', level_type: 'standard', levelLabel: 'مادة تخصص', isAdvanced: false, category: 'specialized' }
       ],
       '3rd_secondary': [
-        { id: 'biology_adv', name: 'الأحياء (مستوى متقدم)', level_type: 'advanced', levelLabel: 'مستوى متقدم (رفيع)', isAdvanced: true },
-        { id: 'chemistry_adv', name: 'الكيمياء (مستوى متقدم)', level_type: 'advanced', levelLabel: 'مستوى متقدم (رفيع)', isAdvanced: true },
-        { id: 'arabic', name: 'اللغة العربية', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'english', name: 'اللغة الأجنبية الأولى', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'life_science_applied', name: 'تطبيقات علوم الحياة والصحة', level_type: 'advanced', levelLabel: 'مستوى متقدم', isAdvanced: true }
+        // مواد الصف الثالث البكالوريا المقررة تخصصياً فقط
+        { id: 'biology_adv', name: 'الأحياء (مستوى متقدم)', level_type: 'advanced', levelLabel: 'مستوى متقدم (رفيع)', isAdvanced: true, category: 'specialized' },
+        { id: 'chemistry_adv', name: 'الكيمياء (مستوى متقدم)', level_type: 'advanced', levelLabel: 'مستوى متقدم (رفيع)', isAdvanced: true, category: 'specialized' }
       ]
     }
   },
@@ -106,28 +105,27 @@ export const BACCALAUREATE_TRACKS: Record<BaccalaureateTrack, TrackConfig> = {
   engineering_and_cs: {
     id: 'engineering_and_cs',
     name: 'مسار الهندسة وعلوم الحاسب',
-    shortName: 'الهندسة والحاسب',
+    shortName: 'الهندسة وعلوم الحاسب',
     iconName: 'Cpu',
     accentColor: 'blue',
     badgeBg: 'bg-blue-50 border-blue-200',
     badgeText: 'text-blue-700',
-    description: 'مسار موجه للراغبين في كليات الهندسة، الحاسبات والذكاء الاصطناعي، وعلوم البيانات.',
-    specializationGuidance: 'التركيز على التعمق في الرياضيات والفيزياء بمستوى متقدم، استخراج ومعالجة المعادلات الهندسية والدوال والتفاضل والتكامل، وتطبيقات البرمجة والخوارزميات بدقة متناهية.',
+    description: 'مسار متخصص لكليات الهندسة، الحاسبات، الذكاء الاصطناعي، وعلوم البيانات.',
+    specializationGuidance: 'في الصف الثالث البكالوريا: دراسة تخصصية بمستوى متقدم (رفيع) في الرياضيات والفيزياء فقط. في الصف الثاني: التخصص في الكيمياء أو البرمجة والذكاء الاصطناعي إلى جانب المواد المشتركة.',
     subjectsByGrade: {
       '2nd_secondary': [
-        { id: 'chemistry_std', name: 'الكيمياء', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'programming', name: 'البرمجة والتكنولوجيا', level_type: 'standard', levelLabel: 'مستوى عام تخصصي', isAdvanced: false, topics: ['algorithms', 'coding', 'logic'] },
-        { id: 'pure_math', name: 'الرياضيات البحتة والتطبيقية', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'physics_eng', name: 'الفيزياء الهندسية', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'arabic', name: 'اللغة العربية (مشترك)', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'english', name: 'اللغة الأجنبية الأولى (مشترك)', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false }
+        // المواد المشتركة (تضاف للمجموع)
+        { id: 'arabic_2nd_eng', name: 'اللغة العربية', level_type: 'standard', levelLabel: 'مشترك إجباري', isAdvanced: false, category: 'shared' },
+        { id: 'english_2nd_eng', name: 'اللغة الأجنبية الأولى', level_type: 'standard', levelLabel: 'مشترك إجباري', isAdvanced: false, category: 'shared' },
+        { id: 'history_2nd_eng', name: 'التاريخ المصري', level_type: 'standard', levelLabel: 'مشترك إجباري', isAdvanced: false, category: 'shared' },
+        // مواد التخصص (الكيمياء أو البرمجة والذكاء الاصطناعي)
+        { id: 'chemistry_2nd_eng', name: 'الكيمياء', level_type: 'standard', levelLabel: 'مادة تخصص', isAdvanced: false, category: 'specialized' },
+        { id: 'ai_prog_2nd_eng', name: 'البرمجة والذكاء الاصطناعي', level_type: 'standard', levelLabel: 'مادة تخصص', isAdvanced: false, category: 'specialized' }
       ],
       '3rd_secondary': [
-        { id: 'math_adv', name: 'الرياضيات (مستوى متقدم)', level_type: 'advanced', levelLabel: 'مستوى متقدم (رفيع)', isAdvanced: true },
-        { id: 'physics_adv', name: 'الفيزياء (مستوى متقدم)', level_type: 'advanced', levelLabel: 'مستوى متقدم (رفيع)', isAdvanced: true },
-        { id: 'ai_and_cs', name: 'علوم الحاسب والذكاء الاصطناعي', level_type: 'advanced', levelLabel: 'مستوى متقدم', isAdvanced: true },
-        { id: 'arabic', name: 'اللغة العربية', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'english', name: 'اللغة الأجنبية الأولى', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false }
+        // مواد الصف الثالث البكالوريا المقررة تخصصياً فقط
+        { id: 'math_adv', name: 'الرياضيات (مستوى متقدم)', level_type: 'advanced', levelLabel: 'مستوى متقدم (رفيع)', isAdvanced: true, category: 'specialized' },
+        { id: 'physics_adv', name: 'الفيزياء (مستوى متقدم)', level_type: 'advanced', levelLabel: 'مستوى متقدم (رفيع)', isAdvanced: true, category: 'specialized' }
       ]
     }
   },
@@ -135,28 +133,27 @@ export const BACCALAUREATE_TRACKS: Record<BaccalaureateTrack, TrackConfig> = {
   business: {
     id: 'business',
     name: 'مسار الأعمال',
-    shortName: 'الأعمال والاقتصاد',
+    shortName: 'مسار الأعمال',
     iconName: 'Briefcase',
     accentColor: 'amber',
     badgeBg: 'bg-amber-50 border-amber-200',
     badgeText: 'text-amber-700',
-    description: 'مسار متخصص لقطاع الأعمال، المحاسبة، التجارة الدولية، التمويل والاستثمار، وإدارة المشاريع.',
-    specializationGuidance: 'التركيز على النظريات الاقتصادية الكلية والجزئية، مبادئ القوائم المالية والمحاسبة، الرياضيات المالية، واستراتيجيات إدارة الأعمال الحديثة مع أمثلة عملية.',
+    description: 'مسار متخصص لكليات التجارة وإدارة الأعمال، الاقتصاد والعلوم السياسية، التمويل والمحاسبة.',
+    specializationGuidance: 'في الصف الثالث البكالوريا: دراسة تخصصية في الاقتصاد (مستوى متقدم رفيع) والرياضيات (مستوى عادي) فقط. في الصف الثاني: التخصص في المحاسبة أو إدارة الأعمال إلى جانب المواد المشتركة.',
     subjectsByGrade: {
       '2nd_secondary': [
-        { id: 'accounting', name: 'المحاسبة المالية', level_type: 'standard', levelLabel: 'مستوى عام تخصصي', isAdvanced: false },
-        { id: 'business_admin', name: 'إدارة الأعمال', level_type: 'standard', levelLabel: 'مستوى عام تخصصي', isAdvanced: false },
-        { id: 'general_math', name: 'الرياضيات', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'arabic', name: 'اللغة العربية (مشترك)', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'english', name: 'اللغة الأجنبية الأولى (مشترك)', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'history_shared', name: 'التاريخ (مشترك)', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false }
+        // المواد المشتركة (تضاف للمجموع)
+        { id: 'arabic_2nd_bus', name: 'اللغة العربية', level_type: 'standard', levelLabel: 'مشترك إجباري', isAdvanced: false, category: 'shared' },
+        { id: 'english_2nd_bus', name: 'اللغة الأجنبية الأولى', level_type: 'standard', levelLabel: 'مشترك إجباري', isAdvanced: false, category: 'shared' },
+        { id: 'history_2nd_bus', name: 'التاريخ المصري', level_type: 'standard', levelLabel: 'مشترك إجباري', isAdvanced: false, category: 'shared' },
+        // مواد التخصص (المحاسبة أو إدارة الأعمال)
+        { id: 'accounting_2nd_bus', name: 'المحاسبة', level_type: 'standard', levelLabel: 'مادة تخصص', isAdvanced: false, category: 'specialized' },
+        { id: 'management_2nd_bus', name: 'إدارة الأعمال', level_type: 'standard', levelLabel: 'مادة تخصص', isAdvanced: false, category: 'specialized' }
       ],
       '3rd_secondary': [
-        { id: 'economics_adv', name: 'الاقتصاد (مستوى متقدم)', level_type: 'advanced', levelLabel: 'مستوى متقدم (رفيع)', isAdvanced: true },
-        { id: 'financial_math', name: 'الرياضيات والتمويل', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'entrepreneurship', name: 'ريادة الأعمال والاستثمار', level_type: 'advanced', levelLabel: 'مستوى متقدم', isAdvanced: true },
-        { id: 'arabic', name: 'اللغة العربية', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'english', name: 'اللغة الأجنبية الأولى', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false }
+        // مواد الصف الثالث البكالوريا المقررة تخصصياً فقط
+        { id: 'economics_adv', name: 'الاقتصاد (مستوى متقدم)', level_type: 'advanced', levelLabel: 'مستوى متقدم (رفيع)', isAdvanced: true, category: 'specialized' },
+        { id: 'math_bus_std', name: 'الرياضيات (مستوى عادي)', level_type: 'standard', levelLabel: 'مستوى عادي', isAdvanced: false, category: 'specialized' }
       ]
     }
   },
@@ -169,22 +166,22 @@ export const BACCALAUREATE_TRACKS: Record<BaccalaureateTrack, TrackConfig> = {
     accentColor: 'purple',
     badgeBg: 'bg-purple-50 border-purple-200',
     badgeText: 'text-purple-700',
-    description: 'مسار متخصص للراغبين في كليات الإعلام، الألسن، الآداب، الفنون الجميلة والتطبيقية، والعلوم الإنسانية.',
-    specializationGuidance: 'التركيز على الجغرافيا التحليلية ونظم المعلومات الجغرافية بمستوى متقدم، التحليل الإحصائي السلوكي، النظريات النفسية والاجتماعية، والتذوق البلاغي والأدبي الرفيع.',
+    description: 'مسار متخصص لكليات الإعلام، الألسن، اللغات، الآداب، الفنون الجميلة، والعلوم الإنسانية والاجتماعية.',
+    specializationGuidance: 'في الصف الثالث البكالوريا: دراسة تخصصية في الجغرافيا (مستوى متقدم رفيع) والإحصاء (مستوى عادي) فقط. في الصف الثاني: التخصص في علم النفس أو اللغة الأجنبية الثانية إلى جانب المواد المشتركة.',
     subjectsByGrade: {
       '2nd_secondary': [
-        { id: 'psychology', name: 'علم النفس والاجتماع', level_type: 'standard', levelLabel: 'مستوى عام تخصصي', isAdvanced: false },
-        { id: 'second_lang', name: 'اللغة الأجنبية الثانية (فرنسي/ألماني/إيطالي/إسباني)', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'geography_intro', name: 'الجغرافيا العامة', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'arabic', name: 'اللغة العربية (مشترك)', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'english', name: 'اللغة الأجنبية الأولى (مشترك)', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false }
+        // المواد المشتركة (تضاف للمجموع)
+        { id: 'arabic_2nd_art', name: 'اللغة العربية', level_type: 'standard', levelLabel: 'مشترك إجباري', isAdvanced: false, category: 'shared' },
+        { id: 'english_2nd_art', name: 'اللغة الأجنبية الأولى', level_type: 'standard', levelLabel: 'مشترك إجباري', isAdvanced: false, category: 'shared' },
+        { id: 'history_2nd_art', name: 'التاريخ المصري', level_type: 'standard', levelLabel: 'مشترك إجباري', isAdvanced: false, category: 'shared' },
+        // مواد التخصص (علم النفس أو اللغة الأجنبية الثانية)
+        { id: 'psychology_2nd_art', name: 'علم النفس', level_type: 'standard', levelLabel: 'مادة تخصص', isAdvanced: false, category: 'specialized' },
+        { id: 'second_lang_2nd_art', name: 'اللغة الأجنبية الثانية', level_type: 'standard', levelLabel: 'مادة تخصص', isAdvanced: false, category: 'specialized' }
       ],
       '3rd_secondary': [
-        { id: 'geography_adv', name: 'الجغرافيا (مستوى متقدم)', level_type: 'advanced', levelLabel: 'مستوى متقدم (رفيع)', isAdvanced: true },
-        { id: 'statistics', name: 'الإحصاء التطبيقي', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'arts_history', name: 'تاريخ الفنون والحضارات', level_type: 'advanced', levelLabel: 'مستوى متقدم', isAdvanced: true },
-        { id: 'arabic', name: 'اللغة العربية', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'english', name: 'اللغة الأجنبية الأولى', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false }
+        // مواد الصف الثالث البكالوريا المقررة تخصصياً فقط
+        { id: 'geography_adv', name: 'الجغرافيا (مستوى متقدم)', level_type: 'advanced', levelLabel: 'مستوى متقدم (رفيع)', isAdvanced: true, category: 'specialized' },
+        { id: 'statistics_std', name: 'الإحصاء (مستوى عادي)', level_type: 'standard', levelLabel: 'مستوى عادي', isAdvanced: false, category: 'specialized' }
       ]
     }
   },
@@ -197,15 +194,15 @@ export const BACCALAUREATE_TRACKS: Record<BaccalaureateTrack, TrackConfig> = {
     accentColor: 'gray',
     badgeBg: 'bg-gray-100 border-gray-200',
     badgeText: 'text-gray-700',
-    description: 'لجميع الطلاب في المراحل الابتدائية والإعدادية والأسئلة التعليمية العامة.',
-    specializationGuidance: 'شرح مبسط وداعم يناسب المرحلة الدراسية المحددة في المنهج المصري.',
+    description: 'لجميع الطلاب في المراحل التعليمية الأخرى والأسئلة العامة.',
+    specializationGuidance: 'شرح مبسط ومباشر وفق أحدث المناهج المعتمدة من وزارة التربية والتعليم المصرية.',
     subjectsByGrade: {
       'other_grades': [
-        { id: 'arabic', name: 'اللغة العربية', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'math', name: 'الرياضيات', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'science', name: 'العلوم', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'social_studies', name: 'الدراسات الاجتماعية', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false },
-        { id: 'english', name: 'اللغة الإنجليزية', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false }
+        { id: 'arabic_gen', name: 'اللغة العربية', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false, category: 'shared' },
+        { id: 'math_gen', name: 'الرياضيات', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false, category: 'specialized' },
+        { id: 'science_gen', name: 'العلوم', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false, category: 'specialized' },
+        { id: 'history_gen', name: 'التاريخ المصري', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false, category: 'shared' },
+        { id: 'english_gen', name: 'اللغة الإنجليزية', level_type: 'standard', levelLabel: 'مستوى عام', isAdvanced: false, category: 'shared' }
       ]
     }
   }
@@ -213,10 +210,10 @@ export const BACCALAUREATE_TRACKS: Record<BaccalaureateTrack, TrackConfig> = {
 
 export function getDefaultCurriculumContext(): CurriculumContext {
   return {
-    grade: '1st_secondary',
-    track: 'preparatory_general',
-    subject: 'الرياضيات',
-    level_type: 'standard',
+    grade: '3rd_secondary',
+    track: 'medical_and_life_sciences',
+    subject: 'الأحياء (مستوى متقدم)',
+    level_type: 'advanced',
     topic: 'عام'
   };
 }
@@ -243,8 +240,8 @@ export function getSubjectsForSelection(grade: SecondaryGrade, track: Baccalaure
   if (subjects && subjects.length > 0) {
     return subjects;
   }
-  // Fallback to preparatory or general if none defined
+  // Fallback
   return (
-    BACCALAUREATE_TRACKS.preparatory_general.subjectsByGrade['1st_secondary'] || []
+    BACCALAUREATE_TRACKS.medical_and_life_sciences.subjectsByGrade['3rd_secondary'] || []
   );
 }

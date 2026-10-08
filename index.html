@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CATA SARX - معلم الذكاء الاصطناعي الذكي</title>
-  <meta name="description" content="منصة CATA SARX التعليمية القائمة على الذكاء الاصطناعي لحل وتفسير الأسئلة الدراسية وشرح المناهج." />
-  <meta property="og:title" content="CATA SARX - معلم الذكاء الاصطناعي الذكي" />
-  <meta property="og:description" content="منصة CATA SARX التعليمية القائمة على الذكاء الاصطناعي لحل وتفسير الأسئلة الدراسية وشرح المناهج." />
+  <title>shomi - معلم الذكاء الاصطناعي الذكي</title>
+  <meta name="description" content="منصة shomi التعليمية القائمة على الذكاء الاصطناعي لحل وتفسير الأسئلة الدراسية وشرح المناهج." />
+  <meta property="og:title" content="shomi - معلم الذكاء الاصطناعي الذكي" />
+  <meta property="og:description" content="منصة shomi التعليمية القائمة على الذكاء الاصطناعي لحل وتفسير الأسئلة الدراسية وشرح المناهج." />
   
   <!-- إثبات ملكية Google Search Console -->
   <meta name="google-site-verification" content="googled2f0c1be3021ade6" />
@@ -55,7 +55,7 @@
 
     /* الحاوية الرئيسية */
     main.site-main {
-      max-width: 860px;
+      max-width: 880px;
       margin: 20px auto;
       padding: 0 15px;
       flex: 1;
@@ -65,16 +65,17 @@
     /* قسم التعريف والترحيب */
     .hero {
       background: var(--card-bg);
-      padding: 20px;
-      border-radius: 12px;
+      padding: 18px 24px;
+      border-radius: 14px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-      margin-bottom: 20px;
+      margin: 0 auto 16px auto;
       border: 1px solid #e2e8f0;
+      max-width: 880px;
     }
 
     .hero h1 {
       margin-top: 0;
-      font-size: 1.5rem;
+      font-size: 1.35rem;
       color: var(--text-main);
     }
 
@@ -82,39 +83,50 @@
       color: var(--text-muted);
       line-height: 1.6;
       margin-bottom: 0;
+      font-size: 0.95rem;
     }
 
     /* بطاقات المقالات الدليلية لتزويد جودة المحتوى لـ AdSense */
     .features-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 15px;
-      margin-bottom: 25px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+      margin: 0 auto 20px auto;
+      max-width: 880px;
     }
 
     .feature-card {
       background: var(--card-bg);
-      padding: 15px;
-      border-radius: 10px;
+      padding: 14px 18px;
+      border-radius: 12px;
       border: 1px solid #e2e8f0;
     }
 
     .feature-card h3 {
       margin-top: 0;
-      font-size: 1.1rem;
+      font-size: 1rem;
       color: var(--primary);
     }
 
     .feature-card p {
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       color: var(--text-muted);
       margin-bottom: 0;
     }
 
-    /* حاوية واجهة الشات */
+    /* حاوية واجهة الشات والحل */
     #chat-container {
-      margin-bottom: 25px;
+      margin: 0 auto 20px auto;
       width: 100%;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    #chat-container #root {
+      width: 100%;
+      max-width: 100%;
     }
 
     /* الفوتر السفلي */
@@ -141,16 +153,16 @@
 <body>
 
   <header class="site-header">
-    <div class="logo">CATA SARX</div>
+    <div class="logo">shomi</div>
     <span style="font-size: 0.85rem; color: #64748b;">المساعد التعليمي الذكي</span>
   </header>
 
   <main class="site-main">
     <!-- قسم تعريفي محتوى عالي الجودة -->
     <section class="hero">
-      <h1>مرحباً بك في منصة CATA SARX الذكية</h1>
+      <h1>مرحباً بك في منصة shomi الذكية</h1>
       <p>
-        منصة <strong>CATA SARX</strong> هي معلمك الشخصي القائم على أحدث تقنيات الذكاء الاصطناعي. نساعدك في فهم وتفسير المواد الدراسية، حل الأسئلة الصعبة خطوة بخطوة، وتبسيط المفاهيم المعقدة لمختلف المراحل التعليمية.
+        منصة <strong>shomi</strong> هي معلمك الشخصي القائم على أحدث تقنيات الذكاء الاصطناعي. نساعدك في فهم وتفسير المواد الدراسية، حل الأسئلة الصعبة خطوة بخطوة، وتبسيط المفاهيم المعقدة لمختلف المراحل التعليمية.
       </p>
     </section>
 
@@ -173,8 +185,9 @@
   </main>
 
   <footer class="site-footer">
-    <p>© 2026 CATA SARX. جميع الحقوق محفوظة.</p>
+    <p>© 2026 shomi. جميع الحقوق محفوظة.</p>
     <div>
+      <a href="blog.html" target="_blank">طريقة الاستخدام والدفع</a> | 
       <a href="privacy.html" target="_blank">سياسة الخصوصية</a> | 
       <a href="about.html" target="_blank">عن المنصة</a> | 
       <a href="contact.html" target="_blank">اتصل بنا</a>
